@@ -1,30 +1,39 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 32
+    namespace 'com.android.support'
+    compileSdk 34
+
     defaultConfig {
-        applicationId "com.android.support"
-        minSdkVersion 19
-        targetSdkVersion 29
+        applicationId 'com.android.support'
+        minSdk 19
+        targetSdk 34
         versionCode 1
-        versionName "3.0"
+        versionName '3.0'
+
         ndk {
-            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86'
+            abiFilters 'armeabi-v7a', 'arm64-v8a'
         }
-        signingConfig signingConfigs.debug
     }
+
     buildTypes {
-        release {
-            shrinkResources false
+        debug {
             minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-        debug {
-            shrinkResources false
+        release {
             minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
     externalNativeBuild {
         ndkBuild {
             path file('src/main/jni/Android.mk')
@@ -32,7 +41,6 @@ android {
     }
 }
 
-//dependencies must be placed below 'android' brackets to get it work on AIDE
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 }
