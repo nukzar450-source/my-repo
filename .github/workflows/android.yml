@@ -28,19 +28,18 @@ jobs:
           java-version: '17'
           cache: gradle
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Install Android SDK packages
+      - name: Install Android SDK components
         run: |
-          echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0"
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
 
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
+      - name: Generate Gradle wrapper
+        run: |
+          gradle wrapper --gradle-version 8.7
+          chmod +x gradlew
 
       - name: Build debug APK
-        run: gradle --no-daemon --stacktrace assembleDebug
+        run: ./gradlew --no-daemon --stacktrace assembleDebug
 
       - name: Upload app-debug.apk
         uses: actions/upload-artifact@v4
